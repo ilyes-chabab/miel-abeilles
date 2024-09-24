@@ -10,7 +10,7 @@ def generate_field():
     df = pd.read_excel(fichier_excel)
 
     # Visualiser les premières lignes du fichier pour savoir quelles colonnes utiliser
-    print(df.head())
+    print(len(df))
 
     # Générer un graphique simple, par exemple un graphique en courbes entre deux colonnes
     plt.plot(df['x'], df['y'])
