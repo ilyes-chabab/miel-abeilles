@@ -24,12 +24,22 @@ class Bee:
 class Hive:
 
     def __init__(self) :
+        self.bee_number = 100
         self.bee =  Bee()
         self.distance = self.bee.get_distance()
     
     def get_distance(self):
         return self.distance
 
+    def get_all_bee_pos(self):
+        for _ in range(self.bee_number):
+            self.bee =  Bee()
+            print(self.bee.get_distance())
+
+
+
+
+
 bee = Bee() 
 hive = Hive()
-print(hive.get_distance())
+print(hive.get_all_bee_pos())
