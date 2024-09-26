@@ -21,6 +21,7 @@ class Bee:
         
         self.flowers = init_flowers_list()
         self.start = (500,500)
+        self.mutate_rate = 0,2
 
     def get_flower_pos(self):
         path = random.sample(self.flowers, len(self.flowers))
@@ -29,7 +30,6 @@ class Bee:
     def get_distance(self):
         import math
         path = self.get_flower_pos()
-        path.append(self.start)
 
         compute_path = 0
         actual_pos = (self.start)
@@ -37,32 +37,15 @@ class Bee:
             # theoreme of pythagore to know the distance between 2 flowers
             compute_path += (math.sqrt(((actual_pos[0] - flowers[0])**2) + ((actual_pos[1] - flowers[1])**2)))
             actual_pos = (flowers[0],flowers[1])
-
+        compute_path += (math.sqrt(((actual_pos[0] - self.start[0])**2) + ((actual_pos[1] - self.start[1])**2)))
         distance = compute_path
-        print(distance)
-        return distance
-        
-
-class Hive:
-
-    def __init__(self) :
-        self.bee_number = 100
-        self.bee =  Bee()
-        self.distance = self.bee.get_distance()
+        return distance , path
     
-    def get_distance(self):
-        return self.distance
-
-    def get_all_bee_pos(self):
-        for _ in range(self.bee_number):
-            self.bee =  Bee()
-            print(self.bee.get_distance())
-
-
+    def mutate(self):
+        pass
 
 
 if __name__ == "__main__":
     bee = Bee() 
-    hive = Hive()
-    # print(hive.get_all_bee_pos())
-    # print(bee.get_distance())
+    distance =bee.get_distance()
+    print(distance)
