@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import math
 
 
 def init_flowers_list():
@@ -24,28 +25,33 @@ class Bee:
         self.start = (500, 500)
         self.mutate_rate = 0.2
         self.build_random_path()
+        self.distance = 0
 
 
     def build_random_path(self):
         self.path = random.sample(self.flowers, len(self.flowers))
         return self.path
-    
-    def compute_segment(self,x,y):
-        return x-y
 
-    def get_distance(self):
-        import math
-        path = self.path
-        computed_path = 0
-        actual_pos = self.start
-        for flowers in path:
+    def compute_distance(self):
+        '''
+        path = path that the bee will travel
+        self.distance = the entire distance that the bee will travel
+
+        the loop  will calculate the distance ( thanks to pythagorean theorem) between two flowers and add the sum to 
+        self.distance
+
+        
+        '''
+        
+        
+        actual_pos = self.start #(500,500)
+        for flower in self.path:
             # theoreme of pythagore to know the distance between 2 flowers
-            computed_path += math.sqrt(((actual_pos[0] - flowers[0]) ** 2)+ ((actual_pos[1] - flowers[1]) ** 2))
-            actual_pos = (flowers[0], flowers[1])
-        print(actual_pos)
-        computed_path += math.sqrt(((actual_pos[0] - self.start[0]) ** 2)+ ((actual_pos[1] - self.start[1]) ** 2))
-        distance = computed_path
-        return distance
+            self.distance += math.sqrt(((actual_pos[0] - flower[0]) ** 2)+ ((actual_pos[1] - flower[1]) ** 2))
+            actual_pos = (flower[0], flower[1])
+        #calculate the distance between the last pos and the start pos (the bee back to the hive)
+        self.distance += math.sqrt(((actual_pos[0] - self.start[0]) ** 2)+ ((actual_pos[1] - self.start[1]) ** 2))
+        return self.distance
 
     def mutate(self):
         pass
@@ -53,5 +59,5 @@ class Bee:
 
 if __name__ == "__main__":
     bee = Bee()
-    distance = bee.get_distance()
+    distance = bee.compute_distance()
     print(distance)
