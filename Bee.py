@@ -1,7 +1,9 @@
-import pandas as pd
+
 import random
 import math
 
+START = (500, 500)
+MUTATE_RATE = 0.2
 
 def init_flowers_list():
 
@@ -22,17 +24,15 @@ class Bee:
     def __init__(self):
 
         self.flowers = init_flowers_list()
-        self.start = (500, 500)
-        self.mutate_rate = 0.2
         self.build_random_path()
-        self.distance = 0
+        self.calculate_fitness()
 
 
     def build_random_path(self):
         self.path = random.sample(self.flowers, len(self.flowers))
         return self.path
 
-    def compute_distance(self):
+    def calculate_fitness(self):
         '''
         path = path that the bee will travel
         self.distance = the entire distance that the bee will travel
@@ -42,22 +42,35 @@ class Bee:
 
         
         '''
-        
-        
-        actual_pos = self.start #(500,500)
+        self.distance= 0
+        actual_pos = START #(500,500)
         for flower in self.path:
             # theoreme of pythagore to know the distance between 2 flowers
             self.distance += math.sqrt(((actual_pos[0] - flower[0]) ** 2)+ ((actual_pos[1] - flower[1]) ** 2))
             actual_pos = (flower[0], flower[1])
         #calculate the distance between the last pos and the start pos (the bee back to the hive)
-        self.distance += math.sqrt(((actual_pos[0] - self.start[0]) ** 2)+ ((actual_pos[1] - self.start[1]) ** 2))
+        self.distance += math.sqrt(((actual_pos[0] - START[0]) ** 2)+ ((actual_pos[1] - START[1]) ** 2))
         return self.distance
 
-    def mutate(self):
-        pass
+    def mutate(self,paths):
+        nb_of_pos_mutated = len(paths) * MUTATE_RATE
+        pos_mutate = random.sample(range(len(paths)), int(nb_of_pos_mutated))
+        print("posmutate : " ,pos_mutate)
+        print(paths[pos_mutate[0]],paths[pos_mutate[1]])
+        for id in range(0,len(pos_mutate),2):
+            id , id2 = pos_mutate[id] , pos_mutate[id+1]
+            paths[id] , paths[id2] = paths[id2] , paths[id]
+
+        print(paths[pos_mutate[0]],paths[pos_mutate[1]])
+        return paths
+
+        
 
 
 if __name__ == "__main__":
     bee = Bee()
-    distance = bee.compute_distance()
-    print(distance)
+    # distance = bee.distance
+    # path = bee.path
+    # print("distance : " ,distance,"path : ",path)
+    # print(bee.path)
+    print(bee.mutate(bee.path))
