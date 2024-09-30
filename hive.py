@@ -4,7 +4,7 @@ import math
 START = (500, 500)
 MUTATE_RATE = 0.2
 POPULATION_SIZE = 100
-NO_IMPROVEMENT_LIMIT = 50  # Nombre de générations sans amélioration avant d'arrêter
+NO_IMPROVEMENT_LIMIT = 50 
 
 def init_flowers_list():
     with open("field.txt", "r") as file:
@@ -76,22 +76,3 @@ class Hive:
         self.population = new_population
         self.evaluate_population()
 
-if __name__ == "__main__":
-    hive = Hive()
-    generation = 0
-    no_improvement_count = 0
-    best_distance = hive.best_bee.distance
-
-    while no_improvement_count < NO_IMPROVEMENT_LIMIT:
-        hive.select_and_breed()
-        generation += 1
-        if hive.best_bee.distance < best_distance:
-            best_distance = hive.best_bee.distance
-            no_improvement_count = 0
-        else:
-            no_improvement_count += 1
-        print(f"Generation {generation}: Best distance = {hive.best_bee.distance}")
-
-    print(f"Best path found after {generation} generations:", hive.best_bee.path)
-    print(f"Total mutations: {hive.total_mutations}")
-    print(f"Total bees generated: {hive.total_bees_generated}")
