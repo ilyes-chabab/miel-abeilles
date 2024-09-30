@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from hive import Hive, START, POPULATION_SIZE, MUTATE_RATE, NO_IMPROVEMENT_LIMIT
+from hive import Hive, START, POPULATION_SIZE, MUTATE_RATE
 
 def plot_field(flowers, start):
     x, y = zip(*flowers)
@@ -37,17 +37,15 @@ def plot_best_path(best_bee, start, generation, best_distance, total_mutations, 
 def main():
     hive = Hive()
     generation = 0
-    no_improvement_count = 0
     best_distance = hive.best_bee.distance
 
-    while no_improvement_count < NO_IMPROVEMENT_LIMIT:
+    while True:
         hive.select_and_breed()
         generation += 1
         if hive.best_bee.distance < best_distance:
             best_distance = hive.best_bee.distance
-            no_improvement_count = 0
         else:
-            no_improvement_count += 1
+            break 
         print(f"Generation {generation}: Best distance = {hive.best_bee.distance}")
 
     print(f"Best path found after {generation} generations:", hive.best_bee.path)

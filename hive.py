@@ -4,7 +4,6 @@ import math
 START = (500, 500)
 MUTATE_RATE = 0.2
 POPULATION_SIZE = 100
-NO_IMPROVEMENT_LIMIT = 50 
 
 def init_flowers_list():
     with open("field.txt", "r") as file:
