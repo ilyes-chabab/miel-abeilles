@@ -22,13 +22,13 @@ def plot_best_path(best_bee, start, generation, best_distance, total_mutations, 
     plt.legend()
 
    
-    textstr = '\n'.join((
+    textstr = ' '.join((
         f'Generations: {generation}',
         f'Best distance: {best_distance:.2f}',
         f'Total mutations: {total_mutations}',
         f'Total bees generated: {total_bees_generated}',
     ))
-    plt.gcf().text(0.02, 0.95, textstr, fontsize=12, verticalalignment='top')
+    plt.figtext(0.5, 0.95, textstr, fontsize=8, ha='center', bbox=dict(facecolor='white', alpha=0.5))
 
     plt.show()
 
