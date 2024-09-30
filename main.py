@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from hive import Hive, START, POPULATION_SIZE, MUTATE_RATE
 
-def plot_field(flowers, start):
+def plot_field(flowers, start): # Plot the field with the flowers and the hive 
     x, y = zip(*flowers)
     plt.scatter(x, y, c='blue', label='Flowers')
     plt.scatter(*start, c='red', label='Hive')
@@ -11,7 +11,7 @@ def plot_field(flowers, start):
     plt.legend()
     plt.show()
 
-def plot_best_path(best_bee, start, generation, best_distance, total_mutations, total_bees_generated):
+def plot_best_path(best_bee, start, generation, best_distance, total_mutations, total_bees_generated): # Plot the best path found by the bees 
     path = best_bee.path + [start]
     x, y = zip(*path)
     plt.plot(x, y, marker='o')
@@ -34,12 +34,12 @@ def plot_best_path(best_bee, start, generation, best_distance, total_mutations, 
 
     plt.show()
 
-def main():
+def main(): # Main function to run the genetic algorithm 
     hive = Hive()
     generation = 0
     best_distance = hive.best_bee.distance
 
-    while True:
+    while True: # Evolve the population until the best bee doesn't improve anymore 
         hive.select_and_breed()
         generation += 1
         if hive.best_bee.distance < best_distance:
@@ -52,8 +52,8 @@ def main():
     print(f"Total mutations: {hive.total_mutations}")
     print(f"Total bees generated: {hive.total_bees_generated}")
 
-    plot_field(hive.best_bee.flowers, START)
+    plot_field(hive.best_bee.flowers, START) 
     plot_best_path(hive.best_bee, START, generation, best_distance, hive.total_mutations, hive.total_bees_generated)
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": 
+    main() 
