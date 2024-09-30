@@ -5,6 +5,8 @@ START = (500, 500)
 MUTATE_RATE = 0.2
 POPULATION_SIZE = 100
 
+# random.seed(42) # Uncomment this line to get the same results every time
+
 def init_flowers_list():
     with open("field.txt", "r") as file:
         lines = file.readlines()
