@@ -27,6 +27,8 @@ def plot_best_path(best_bee, start, generation, best_distance, total_mutations, 
         f'Best distance: {best_distance:.2f}',
         f'Total mutations: {total_mutations}',
         f'Total bees generated: {total_bees_generated}',
+        f'Population size: {POPULATION_SIZE}',
+        f'Mutate rate: {MUTATE_RATE}'
     ))
     plt.figtext(0.5, 0.95, textstr, fontsize=8, ha='center', bbox=dict(facecolor='white', alpha=0.5))
 
