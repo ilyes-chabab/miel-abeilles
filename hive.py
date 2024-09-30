@@ -51,6 +51,8 @@ class Hive:
         self.population = [Bee() for _ in range(POPULATION_SIZE)]
         self.best_bee = None
         self.evaluate_population()
+        self.total_mutations = 0
+        self.total_bees_generated = POPULATION_SIZE
 
     def evaluate_population(self):
         self.population.sort(key=lambda bee: bee.distance)
@@ -65,9 +67,11 @@ class Hive:
             new_bee.path = bee.mutate(bee.path)
             new_bee.calculate_fitness()
             new_population.append(new_bee)
+            self.total_mutations += 1
 
         while len(new_population) < POPULATION_SIZE:
             new_population.append(Bee())
+            self.total_bees_generated += 1
 
         self.population = new_population
         self.evaluate_population()
@@ -89,3 +93,5 @@ if __name__ == "__main__":
         print(f"Generation {generation}: Best distance = {hive.best_bee.distance}")
 
     print(f"Best path found after {generation} generations:", hive.best_bee.path)
+    print(f"Total mutations: {hive.total_mutations}")
+    print(f"Total bees generated: {hive.total_bees_generated}")
