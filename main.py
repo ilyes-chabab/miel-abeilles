@@ -3,23 +3,33 @@ from hive import Hive, START, POPULATION_SIZE, MUTATE_RATE, NO_IMPROVEMENT_LIMIT
 
 def plot_field(flowers, start):
     x, y = zip(*flowers)
-    plt.scatter(x, y, c='blue', label='Fleurs')
-    plt.scatter(*start, c='red', label='Ruche')
-    plt.title('Champ de Fleurs')
+    plt.scatter(x, y, c='blue', label='Flowers')
+    plt.scatter(*start, c='red', label='Hive')
+    plt.title('Field')
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.legend()
     plt.show()
 
-def plot_best_path(best_bee, start):
+def plot_best_path(best_bee, start, generation, best_distance, total_mutations, total_bees_generated):
     path = best_bee.path + [start]
     x, y = zip(*path)
     plt.plot(x, y, marker='o')
-    plt.scatter(*start, c='red', label='Ruche')
-    plt.title('Meilleur Chemin Trouvé')
+    plt.scatter(*start, c='red', label='Hive', zorder=5)
+    plt.title('Best path found')
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.legend()
+
+   
+    textstr = '\n'.join((
+        f'Generations: {generation}',
+        f'Best distance: {best_distance:.2f}',
+        f'Total mutations: {total_mutations}',
+        f'Total bees generated: {total_bees_generated}',
+    ))
+    plt.gcf().text(0.02, 0.95, textstr, fontsize=12, verticalalignment='top')
+
     plt.show()
 
 def main():
@@ -43,7 +53,7 @@ def main():
     print(f"Total bees generated: {hive.total_bees_generated}")
 
     plot_field(hive.best_bee.flowers, START)
-    plot_best_path(hive.best_bee, START)
+    plot_best_path(hive.best_bee, START, generation, best_distance, hive.total_mutations, hive.total_bees_generated)
 
 if __name__ == "__main__":
     main()
