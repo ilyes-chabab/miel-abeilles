@@ -1,9 +1,10 @@
 import random
 import math
 
-START = (500, 500)
+BEEHIVE_POS = (500, 500)
 MUTATE_RATE = 0.2
 POPULATION_SIZE = 100
+POPULATION_RATE = 0.1
 
 # random.seed(42) # Uncomment this line to get the same results every time
 
@@ -28,24 +29,25 @@ class Bee: # The bee class represents a bee that has a path to follow and a dist
 
     def calculate_fitness(self): # Calculate the distance of the path 
         self.distance = 0
-        actual_pos = START
+        actual_pos = BEEHIVE_POS
         for flower in self.path:
             self.distance += math.sqrt(
                 ((actual_pos[0] - flower[0]) ** 2) + ((actual_pos[1] - flower[1]) ** 2)
             )
             actual_pos = (flower[0], flower[1])
         self.distance += math.sqrt(
-            ((actual_pos[0] - START[0]) ** 2) + ((actual_pos[1] - START[1]) ** 2)
+            ((actual_pos[0] - BEEHIVE_POS[0]) ** 2) + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
         )
         return self.distance
 
     def mutate(self, paths): # Mutate the path by swapping two random positions 
-        nb_of_pos_mutated = len(paths) * MUTATE_RATE
-        pos_mutate = random.sample(range(len(paths)), int(nb_of_pos_mutated))
-        for id in range(0, len(pos_mutate), 2):
-            id, id2 = pos_mutate[id], pos_mutate[id + 1]
+        nb_of_pos_mutated = int(len(paths) * MUTATE_RATE) 
+        pos_mutate = random.sample(range(len(paths)), nb_of_pos_mutated)
+        for i in range(0, len(pos_mutate) - 1, 2):
+            id, id2 = pos_mutate[i], pos_mutate[i + 1]
             paths[id], paths[id2] = paths[id2], paths[id]
         return paths
+
 
 class Hive: # The hive class contains the population of bees and the logic to evolve them 
     def __init__(self):
@@ -59,21 +61,29 @@ class Hive: # The hive class contains the population of bees and the logic to ev
         self.population.sort(key=lambda bee: bee.distance) # Ascending order 
         self.best_bee = self.population[0] # The best bee is the first one 
 
-    def select_and_breed(self): # Select the best bees and breed them to create a new population 
-        selected_bees = self.population[:POPULATION_SIZE // 2] # Select the best half of the population 
-        new_population = [] # Create a new population 
+    def select_best_bees(self):
+        selected_bees_count = int(len(self.population) * POPULATION_RATE)
+        return self.population[:selected_bees_count]
 
-        for bee in selected_bees: # For each selected bee, create a new bee by mutating its path 
-            new_bee = Bee()
-            new_bee.path = bee.mutate(bee.path)
-            new_bee.calculate_fitness()
-            new_population.append(new_bee)
-            self.total_mutations += 1
+    def create_mutated_bee(self, selected_bee):
+        new_bee = Bee()
+        new_bee.path = selected_bee.mutate(selected_bee.path)
+        new_bee.calculate_fitness()
+        self.total_mutations += 1
+        return new_bee
 
-        while len(new_population) < POPULATION_SIZE: # Fill the rest of the population with new bees 
-            new_population.append(Bee())
-            self.total_bees_generated += 1
+    def generate_new_population(self, selected_bees):
+        new_population = []
+        while len(new_population) < POPULATION_SIZE:
+            for selected_bee in selected_bees:
+                if len(new_population) < POPULATION_SIZE:
+                    new_bee = self.create_mutated_bee(selected_bee)
+                    new_population.append(new_bee)
+                    self.total_bees_generated += 1 # Incrémenter ici
+        return new_population
 
-        self.population = new_population # Replace the old population with the new one 
-        self.evaluate_population() # Evaluate the new population 
 
+    def select_and_breed(self):
+        selected_bees = self.select_best_bees()
+        self.population = self.generate_new_population(selected_bees)
+        self.evaluate_population()
