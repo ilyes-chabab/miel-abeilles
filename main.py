@@ -13,7 +13,7 @@ def plot_field(flowers, BEEHIVE_POS):
     plt.show()
 
 
-def plot_best_distances(best_distances, mutate_rate, crossover_rate, population_size, elite_count):
+def plot_best_distances(best_distances, mutate_rate, crossover_rate, population_size):
     plt.plot(best_distances)
     plt.title("Best Distance per Generation")
     plt.xlabel("Generation")
@@ -22,7 +22,6 @@ def plot_best_distances(best_distances, mutate_rate, crossover_rate, population_
         f"Mutation Rate: {mutate_rate * 100:.2f}%",
         f"Crossover Rate: {crossover_rate * 100:.2f}%",
         f"Population Size: {population_size}",
-        f"Elite Count: {elite_count}",
     ))
 
     plt.figtext(0.5, 0.95, textstr, fontsize=8, ha='center', bbox=dict(facecolor='white', alpha=0.5))
@@ -56,7 +55,7 @@ def plot_best_path(
             f"Population size: {POPULATION_SIZE}",
             f"Mutate rate: {MUTATE_RATE}",
             f"Population rate: {POPULATION_RATE}",
-            f"Elite count: {ELITE_COUNT}",
+    
         )
     )
     plt.figtext(
@@ -102,9 +101,9 @@ def main(num_generations):
         hive.total_mutations,
         hive.total_bees_generated,
     )
-    plot_best_distances(best_distances, MUTATE_RATE, 1 - MUTATE_RATE, POPULATION_SIZE, ELITE_COUNT)
+    plot_best_distances(best_distances, MUTATE_RATE, 1 - MUTATE_RATE, POPULATION_SIZE)
 
 
 if __name__ == "__main__":
-    num_generations = 150  # Specify the number of generations you want to run
+    num_generations = 1000  # Specify the number of generations you want to run
     main(num_generations)

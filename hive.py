@@ -5,7 +5,6 @@ BEEHIVE_POS = (500, 500) # The position of the beehive
 MUTATE_RATE = 0.04 # The probability of a bee to mutate
 POPULATION_SIZE = 100 # The size of the population of bees
 POPULATION_RATE = 0.2 # The rate of the population to select for the next generation
-ELITE_COUNT = 5  # The number of elite bees to keep for the next generation 
 
 #random.seed(42)  # Uncomment this line to get the same results every time
 
@@ -52,7 +51,7 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
             paths[id], paths[id2] = paths[id2], paths[id]
         return paths
 
-    def crossover(self, other_bee):  # Crossover the path of the bee with another bee 
+    def crossover(self, other_bee):  # Crossover the path of the bee with another bee  
         cut = random.randint(0, len(self.path) - 1)
         new_path = self.path[:cut] + [flower for flower in other_bee.path if flower not in self.path[:cut]]
         return new_path
@@ -88,7 +87,7 @@ class Hive:
         return new_bee
 
     def generate_new_population(self, selected_bees): # Generate a new population of bees from the selected bees 
-        new_population = []
+        new_population = [] # Keep the elite bees for the next generation
         while len(new_population) < POPULATION_SIZE: # Generate new bees by mutation or crossover
             if random.random() < MUTATE_RATE: # Mutate the bee with a probability of MUTATE_RATE 
                 parent = random.choice(selected_bees)
