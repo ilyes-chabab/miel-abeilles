@@ -90,11 +90,7 @@ def main(num_generations):
         if hive.best_bee.distance < best_distance:
             best_distance = hive.best_bee.distance
         best_distances.append(hive.best_bee.distance)
-        print(f"Generation {generation}: Best distance = {hive.best_bee.distance}")
 
-    print(f"Best path found after {generation} generations:", hive.best_bee.path)
-    print(f"Total mutations: {hive.total_mutations}")
-    print(f"Total bees generated: {hive.total_bees_generated}")
 
     plot_field(hive.best_bee.flowers, BEEHIVE_POS)
     plot_best_path(

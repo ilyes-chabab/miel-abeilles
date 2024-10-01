@@ -4,7 +4,7 @@ import math
 BEEHIVE_POS = (500, 500)  # The position of the beehive
 MUTATE_RATE = 0.045  # The probability of a bee to mutate
 POPULATION_SIZE = 100  # The size of the population of bees
-POPULATION_RATE = 0.1  # The rate of the population to select for the next generation
+POPULATION_RATE = 0.2  # The rate of the population to select for the next generation
 # random.seed(42)  # Uncomment this line to get the same results every time
 
 
@@ -29,7 +29,7 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
 
     def build_random_path(self):  # Build a random path to the flowers
         self.path = random.sample(self.flowers, len(self.flowers))
-        return self.path
+        
 
     def calculate_fitness(
         self,
@@ -45,7 +45,7 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
             ((actual_pos[0] - BEEHIVE_POS[0]) ** 2)
             + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
         )
-        return self.distance
+        
 
     def mutate(
         self, paths
