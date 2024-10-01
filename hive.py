@@ -1,11 +1,11 @@
 import random
 import math
 
-BEEHIVE_POS = (500, 500)
-MUTATE_RATE = 0.04
-POPULATION_SIZE = 100
-POPULATION_RATE = 0.2
-ELITE_COUNT = 5 
+BEEHIVE_POS = (500, 500) # The position of the beehive
+MUTATE_RATE = 0.04 # The probability of a bee to mutate
+POPULATION_SIZE = 100 # The size of the population of bees
+POPULATION_RATE = 0.2 # The rate of the population to select for the next generation
+ELITE_COUNT = 5  # The number of elite bees to keep for the next generation 
 
 #random.seed(42)  # Uncomment this line to get the same results every time
 
@@ -30,7 +30,7 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
         self.path = random.sample(self.flowers, len(self.flowers))
         return self.path
 
-    def calculate_fitness(self):
+    def calculate_fitness(self): # Calculate the distance of the path the bee has to follow to collect all the flowers and return to the beehive 
         self.distance = 0
         actual_pos = BEEHIVE_POS
         for flower in self.path:
@@ -44,15 +44,15 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
         )
         return self.distance
 
-    def mutate(self, paths):
-        nb_of_pos_mutated = max(1, int(len(paths) * MUTATE_RATE))  # Assurer au moins une mutation
+    def mutate(self, paths): # Mutate the path of the bee by swapping two random flowers 
+        nb_of_pos_mutated = max(1, int(len(paths) * MUTATE_RATE)) 
         pos_mutate = random.sample(range(len(paths)), nb_of_pos_mutated)
         for i in range(0, len(pos_mutate) - 1, 2):
             id, id2 = pos_mutate[i], pos_mutate[i + 1]
             paths[id], paths[id2] = paths[id2], paths[id]
         return paths
 
-    def crossover(self, other_bee):
+    def crossover(self, other_bee):  # Crossover the path of the bee with another bee 
         cut = random.randint(0, len(self.path) - 1)
         new_path = self.path[:cut] + [flower for flower in other_bee.path if flower not in self.path[:cut]]
         return new_path
@@ -66,34 +66,34 @@ class Hive:
         self.total_mutations = 0
         self.total_bees_generated = POPULATION_SIZE
 
-    def evaluate_population(self):
+    def evaluate_population(self): # Evaluate the population of bees and sort them by distance
         self.population.sort(key=lambda bee: bee.distance)
         self.best_bee = self.population[0]
 
-    def select_best_bees(self):
+    def select_best_bees(self): # Select the best bees of the population
         selected_bees_count = int(len(self.population) * POPULATION_RATE)
         return self.population[:selected_bees_count]
 
-    def create_mutated_bee(self, selected_bee):
+    def create_mutated_bee(self, selected_bee): # Create a mutated bee from a selected bee
         new_bee = Bee()
         new_bee.path = selected_bee.mutate(selected_bee.path)
         new_bee.calculate_fitness()
         self.total_mutations += 1
         return new_bee
 
-    def create_crossover_bee(self, parent1, parent2):
+    def create_crossover_bee(self, parent1, parent2): # Create a bee from two parents by crossover
         new_bee = Bee()
         new_bee.path = parent1.crossover(parent2)
         new_bee.calculate_fitness()
         return new_bee
 
-    def generate_new_population(self, selected_bees):
+    def generate_new_population(self, selected_bees): # Generate a new population of bees from the selected bees 
         new_population = []
-        while len(new_population) < POPULATION_SIZE:
-            if random.random() < MUTATE_RATE:
+        while len(new_population) < POPULATION_SIZE: # Generate new bees by mutation or crossover
+            if random.random() < MUTATE_RATE: # Mutate the bee with a probability of MUTATE_RATE 
                 parent = random.choice(selected_bees)
                 new_bee = self.create_mutated_bee(parent)
-            else:
+            else: # Crossover two random selected bees 
                 parent1, parent2 = random.sample(selected_bees, 2)
                 new_bee = self.create_crossover_bee(parent1, parent2)
             new_population.append(new_bee)
@@ -102,7 +102,7 @@ class Hive:
 
 
 
-    def select_and_breed(self):
+    def select_and_breed(self): # Select the best bees of the population and generate a new population from them 
         selected_bees = self.select_best_bees()
         self.population = self.generate_new_population(selected_bees)
         self.evaluate_population()
