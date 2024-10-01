@@ -2,9 +2,9 @@ import random
 import math
 
 BEEHIVE_POS = (500, 500)
-MUTATE_RATE = 0.2
+MUTATE_RATE = 0.05
 POPULATION_SIZE = 100
-POPULATION_RATE = 0.1
+POPULATION_RATE = 0.7
 
 # random.seed(42) # Uncomment this line to get the same results every time
 
@@ -27,7 +27,7 @@ class Bee: # The bee class represents a bee that has a path to follow and a dist
         self.path = random.sample(self.flowers, len(self.flowers))
         return self.path
 
-    def calculate_fitness(self): # Calculate the distance of the path 
+    def calculate_fitness(self):
         self.distance = 0
         actual_pos = BEEHIVE_POS
         for flower in self.path:
@@ -39,9 +39,9 @@ class Bee: # The bee class represents a bee that has a path to follow and a dist
             ((actual_pos[0] - BEEHIVE_POS[0]) ** 2) + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
         )
         return self.distance
-
-    def mutate(self, paths): # Mutate the path by swapping two random positions 
-        nb_of_pos_mutated = int(len(paths) * MUTATE_RATE) 
+    
+    def mutate(self, paths):
+        nb_of_pos_mutated = int(len(paths) * MUTATE_RATE)
         pos_mutate = random.sample(range(len(paths)), nb_of_pos_mutated)
         for i in range(0, len(pos_mutate) - 1, 2):
             id, id2 = pos_mutate[i], pos_mutate[i + 1]
@@ -49,17 +49,18 @@ class Bee: # The bee class represents a bee that has a path to follow and a dist
         return paths
 
 
-class Hive: # The hive class contains the population of bees and the logic to evolve them 
-    def __init__(self):
-        self.population = [Bee() for _ in range(POPULATION_SIZE)] 
-        self.best_bee = None 
-        self.evaluate_population()
-        self.total_mutations = 0 
-        self.total_bees_generated = POPULATION_SIZE 
 
-    def evaluate_population(self): # Sort the population by distance 
-        self.population.sort(key=lambda bee: bee.distance) # Ascending order 
-        self.best_bee = self.population[0] # The best bee is the first one 
+class Hive:
+    def __init__(self):
+        self.population = [Bee() for _ in range(POPULATION_SIZE)]
+        self.best_bee = None
+        self.evaluate_population()
+        self.total_mutations = 0
+        self.total_bees_generated = POPULATION_SIZE
+
+    def evaluate_population(self):
+        self.population.sort(key=lambda bee: bee.distance)
+        self.best_bee = self.population[0]
 
     def select_best_bees(self):
         selected_bees_count = int(len(self.population) * POPULATION_RATE)
@@ -79,9 +80,8 @@ class Hive: # The hive class contains the population of bees and the logic to ev
                 if len(new_population) < POPULATION_SIZE:
                     new_bee = self.create_mutated_bee(selected_bee)
                     new_population.append(new_bee)
-                    self.total_bees_generated += 1 # Incrémenter ici
+                    self.total_bees_generated += 1
         return new_population
-
 
     def select_and_breed(self):
         selected_bees = self.select_best_bees()
