@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from hive import Hive, BEEHIVE_POS, POPULATION_SIZE, MUTATE_RATE, POPULATION_RATE,  ELITE_COUNT
+from hive import Hive, BEEHIVE_POS, POPULATION_SIZE, MUTATE_RATE, POPULATION_RATE
 
 
-def plot_field(flowers, BEEHIVE_POS): 
+def plot_field(flowers, BEEHIVE_POS):
     x, y = zip(*flowers)
     plt.scatter(x, y, c="blue", label="Flowers")
     plt.scatter(*BEEHIVE_POS, c="red", label="Hive")
@@ -18,13 +18,22 @@ def plot_best_distances(best_distances, mutate_rate, crossover_rate, population_
     plt.title("Best Distance per Generation")
     plt.xlabel("Generation")
     plt.ylabel("Best Distance")
-    textstr = '   '.join((
-        f"Mutation Rate: {mutate_rate * 100:.2f}%",
-        f"Crossover Rate: {crossover_rate * 100:.2f}%",
-        f"Population Size: {population_size}",
-    ))
+    textstr = "   ".join(
+        (
+            f"Mutation Rate: {mutate_rate * 100:.2f}%",
+            f"Crossover Rate: {crossover_rate * 100:.2f}%",
+            f"Population Size: {population_size}",
+        )
+    )
 
-    plt.figtext(0.5, 0.95, textstr, fontsize=8, ha='center', bbox=dict(facecolor='white', alpha=0.5))
+    plt.figtext(
+        0.5,
+        0.95,
+        textstr,
+        fontsize=8,
+        ha="center",
+        bbox=dict(facecolor="white", alpha=0.5),
+    )
 
     plt.show()
 
@@ -36,7 +45,7 @@ def plot_best_path(
     best_distance,
     total_mutations,
     total_bees_generated,
-):  
+):
     path = [BEEHIVE_POS] + best_bee.path + [BEEHIVE_POS]
     x, y = zip(*path)
     plt.plot(x, y, marker="o")
@@ -55,7 +64,6 @@ def plot_best_path(
             f"Population size: {POPULATION_SIZE}",
             f"Mutate rate: {MUTATE_RATE}",
             f"Population rate: {POPULATION_RATE}",
-    
         )
     )
     plt.figtext(
@@ -70,22 +78,18 @@ def plot_best_path(
     plt.show()
 
 
-def main(num_generations):  
+def main(num_generations):
     hive = Hive()
     generation = 0
     best_distance = hive.best_bee.distance
     best_distances = [best_distance]
 
-    while (
-        generation < num_generations
-    ):  
+    while generation < num_generations:
         hive.select_and_breed()
         generation += 1
         if hive.best_bee.distance < best_distance:
             best_distance = hive.best_bee.distance
-        best_distances.append(
-            hive.best_bee.distance
-        )  
+        best_distances.append(hive.best_bee.distance)
         print(f"Generation {generation}: Best distance = {hive.best_bee.distance}")
 
     print(f"Best path found after {generation} generations:", hive.best_bee.path)
