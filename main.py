@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from hive import Hive, BEEHIVE_POS, POPULATION_SIZE
+from hive import Hive, BEEHIVE_POS, POPULATION_SIZE, FLOWERS
 import matplotlib.pyplot as plt
 
 
@@ -13,6 +13,7 @@ class BeeSimulationApp:
         self.mutate_rate = tk.DoubleVar(value=0.045)
         self.num_generations = tk.IntVar(value=1500)
         self.crossover_rate = tk.DoubleVar(value=1 - self.mutate_rate.get())
+        self.MUTATION_INTENSITY = tk.DoubleVar(value=0.05)  # New variable
 
         self.create_widgets()
 
@@ -27,44 +28,77 @@ class BeeSimulationApp:
             self.root, text="Rate of the best bees selected for the next generations"
         ).grid(column=2, row=0, padx=10, pady=5)
 
-        ttk.Label(self.root, text="Mutate Rate:").grid(column=0, row=1, padx=10, pady=5)
+        self.selected_bees_label = ttk.Label(self.root, text="")
+        self.selected_bees_label.grid(column=0, row=1, columnspan=3, padx=10, pady=5)
+
+        ttk.Label(self.root, text="Mutate Rate:").grid(column=0, row=2, padx=10, pady=5)
         ttk.Entry(self.root, textvariable=self.mutate_rate).grid(
-            column=1, row=1, padx=10, pady=5
+            column=1, row=2, padx=10, pady=5
         )
         ttk.Label(self.root, text="Probability of a bee to mutate").grid(
-            column=2, row=1, padx=10, pady=5
+            column=2, row=2, padx=10, pady=5
         )
 
         ttk.Label(self.root, text="Crossover Rate:").grid(
-            column=0, row=2, padx=10, pady=5
+            column=0, row=3, padx=10, pady=5
         )
         ttk.Label(self.root, textvariable=self.crossover_rate).grid(
-            column=1, row=2, padx=10, pady=5
+            column=1, row=3, padx=10, pady=5
         )
         ttk.Label(
             self.root, text="Probability of a bee interbreeding with another"
-        ).grid(column=2, row=2, padx=10, pady=5)
+        ).grid(column=2, row=3, padx=10, pady=5)
+
+        ttk.Label(self.root, text="Mutation intensity:").grid(
+            column=0, row=4, padx=10, pady=5
+        )
+        ttk.Entry(self.root, textvariable=self.MUTATION_INTENSITY).grid(
+            column=1, row=4, padx=10, pady=5
+        )
+        ttk.Label(self.root, text="Controls how many flower positions will be affected by the mutation").grid(
+            column=2, row=4, padx=10, pady=5
+        )
+
+        self.mutated_positions_label = ttk.Label(self.root, text="")
+        self.mutated_positions_label.grid(column=0, row=5, columnspan=3, padx=10, pady=5)
 
         ttk.Label(self.root, text="Number of Generations:").grid(
-            column=0, row=3, padx=10, pady=5
+            column=0, row=6, padx=10, pady=5
         )
         ttk.Entry(self.root, textvariable=self.num_generations).grid(
-            column=1, row=3, padx=10, pady=5
+            column=1, row=6, padx=10, pady=5
         )
 
         ttk.Button(self.root, text="Run Simulation", command=self.run_simulation).grid(
-            column=0, row=4, columnspan=2, pady=10
+            column=0, row=7, columnspan=2, pady=10
         )
 
         self.progress = ttk.Progressbar(
             self.root, orient="horizontal", length=200, mode="determinate"
         )
-        self.progress.grid(column=0, row=5, columnspan=2, pady=10)
+        self.progress.grid(column=0, row=8, columnspan=2, pady=10)
 
         self.mutate_rate.trace("w", self.update_crossover_rate)
+        self.MUTATION_INTENSITY.trace("w", self.update_mutated_positions_label)
+        self.population_rate.trace("w", self.update_selected_bees_label)
+
+        self.update_mutated_positions_label()
+        self.update_selected_bees_label()
 
     def update_crossover_rate(self, *args):
         self.crossover_rate.set(1 - self.mutate_rate.get())
+
+    def update_mutated_positions_label(self, *args):
+        num_positions = max(1, int(len(FLOWERS) * self.MUTATION_INTENSITY.get()))
+        self.mutated_positions_label.config(
+            text=f"Number of flower positions changed: {num_positions} / 50"
+        )
+
+    def update_selected_bees_label(self, *args):
+        num_selected_bees = max(1, int(POPULATION_SIZE * self.population_rate.get()))
+        self.selected_bees_label.config(
+            text=f"Number of best bees selected: {num_selected_bees} / 100"
+        )
 
     def run_simulation(self):
         self.progress["maximum"] = self.num_generations.get()
@@ -84,7 +118,7 @@ class BeeSimulationApp:
             self.progress["value"] = generation
             self.root.update_idletasks()
 
-        self.plot_field(hive.best_bee.flowers, BEEHIVE_POS)
+        self.plot_field(FLOWERS, BEEHIVE_POS)
         self.plot_best_path(
             hive.best_bee,
             BEEHIVE_POS,
@@ -104,8 +138,8 @@ class BeeSimulationApp:
 
     def plot_field(self, flowers, BEEHIVE_POS):
         x, y = zip(*flowers)
-        plt.scatter(x, y, c="blue", label="Flowers")
-        plt.scatter(*BEEHIVE_POS, c="red", label="Hive")
+        plt.scatter(x, y, c="green", label="Flowers")
+        plt.scatter(*BEEHIVE_POS, c="yellow", label="Hive")
         plt.title("Field")
         plt.xlabel("X")
         plt.ylabel("Y")
@@ -157,7 +191,7 @@ class BeeSimulationApp:
         path = [BEEHIVE_POS] + best_bee.path + [BEEHIVE_POS]
         x, y = zip(*path)
         plt.plot(x, y, marker="o")
-        plt.scatter(*BEEHIVE_POS, c="red", label="Hive", zorder=5)
+        plt.scatter(*BEEHIVE_POS, c="yellow", label="Hive", zorder=5)
         plt.title("Best path found")
         plt.xlabel("X")
         plt.ylabel("Y")

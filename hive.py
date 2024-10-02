@@ -3,6 +3,7 @@ import math
 
 BEEHIVE_POS = (500, 500)  # The position of the beehive
 MUTATE_RATE = 0.045  # The probability of a bee to mutate
+MUTATION_INTENSITY = 0.05  # The mutation intensity that controls how many flower positions will be affected by the mutation
 POPULATION_SIZE = 100  # The size of the population of bees
 POPULATION_RATE = 0.2  # The rate of the population to select for the next generation
 # random.seed(42)  # Uncomment this line to get the same results every time
@@ -23,12 +24,11 @@ FLOWERS = init_flowers_list()  # The list of flowers the bees have to collect
 
 class Bee:  # The bee class represents a bee that has a path to follow and a distance to the flowers
     def __init__(self):
-        self.flowers = FLOWERS
         self.build_random_path()
         self.calculate_fitness()
 
     def build_random_path(self):  # Build a random path to the flowers
-        self.path = random.sample(self.flowers, len(self.flowers))
+        self.path = random.sample(FLOWERS, len(FLOWERS))
 
     def calculate_fitness(
         self,
@@ -46,9 +46,9 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
         )
 
     def mutate(
-        self, paths
+        self, paths, MUTATION_INTENSITY
     ):  # Mutate the path of the bee by swapping two random flowers
-        nb_of_pos_mutated = max(1, int(len(paths) * MUTATE_RATE))
+        nb_of_pos_mutated = max(1, int(len(paths) * MUTATION_INTENSITY))
         pos_mutate = random.sample(range(len(paths)), nb_of_pos_mutated)
         for i in range(0, len(pos_mutate) - 1, 2):
             id, id2 = pos_mutate[i], pos_mutate[i + 1]
@@ -85,7 +85,7 @@ class Hive:
         self, selected_bee
     ):  # Create a mutated bee from a selected bee
         new_bee = Bee()
-        new_bee.path = selected_bee.mutate(selected_bee.path)
+        new_bee.path = selected_bee.mutate(selected_bee.path, MUTATION_INTENSITY)
         new_bee.calculate_fitness()
         self.total_mutations += 1
         return new_bee
