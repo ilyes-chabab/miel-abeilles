@@ -48,7 +48,7 @@ class BeeSimulationApp:
             self.root.update_idletasks()
 
         self.plot_field(hive.best_bee.flowers, BEEHIVE_POS)
-        self.plot_best_path(hive.best_bee, BEEHIVE_POS, generation, best_distance, hive.total_mutations, hive.total_bees_generated)
+        self.plot_best_path(hive.best_bee, BEEHIVE_POS, generation, best_distance, hive.total_mutations, hive.total_bees_generated, 1 - self.mutate_rate.get())
         self.plot_best_distances(best_distances, self.mutate_rate.get(), 1 - self.mutate_rate.get(), POPULATION_SIZE)
 
     def plot_field(self, flowers, BEEHIVE_POS):
@@ -85,7 +85,7 @@ class BeeSimulationApp:
 
         plt.show()
 
-    def plot_best_path(self, best_bee, BEEHIVE_POS, generation, best_distance, total_mutations, total_bees_generated):
+    def plot_best_path(self, best_bee, BEEHIVE_POS, generation, best_distance, total_mutations, total_bees_generated, crossover_rate):
         path = [BEEHIVE_POS] + best_bee.path + [BEEHIVE_POS]
         x, y = zip(*path)
         plt.plot(x, y, marker="o")
@@ -103,6 +103,7 @@ class BeeSimulationApp:
                 f"Total bees generated: {total_bees_generated}",
                 f"Population size: {POPULATION_SIZE}",
                 f"Mutate rate: {self.mutate_rate.get() * 100:.2f}%",
+                f"Crossover rate: {crossover_rate * 100:.2f}%",
                 f"Best population rate: {self.population_rate.get() * 100:.2f}%",
             )
         )
