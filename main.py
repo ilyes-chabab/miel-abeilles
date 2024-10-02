@@ -3,31 +3,68 @@ from tkinter import ttk
 from hive import Hive, BEEHIVE_POS, POPULATION_SIZE
 import matplotlib.pyplot as plt
 
+
 class BeeSimulationApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Bee Simulation")
+        self.root.title("Bee Simulation / Population size set at 100 bees")
 
         self.population_rate = tk.DoubleVar(value=0.2)
         self.mutate_rate = tk.DoubleVar(value=0.045)
         self.num_generations = tk.IntVar(value=1500)
+        self.crossover_rate = tk.DoubleVar(value=1 - self.mutate_rate.get())
 
         self.create_widgets()
 
     def create_widgets(self):
-        ttk.Label(self.root, text="Population Rate:").grid(column=0, row=0, padx=10, pady=5)
-        ttk.Entry(self.root, textvariable=self.population_rate).grid(column=1, row=0, padx=10, pady=5)
+        ttk.Label(self.root, text="Population Rate:").grid(
+            column=0, row=0, padx=10, pady=5
+        )
+        ttk.Entry(self.root, textvariable=self.population_rate).grid(
+            column=1, row=0, padx=10, pady=5
+        )
+        ttk.Label(
+            self.root, text="Rate of the best bees selected for the next generations"
+        ).grid(column=2, row=0, padx=10, pady=5)
 
         ttk.Label(self.root, text="Mutate Rate:").grid(column=0, row=1, padx=10, pady=5)
-        ttk.Entry(self.root, textvariable=self.mutate_rate).grid(column=1, row=1, padx=10, pady=5)
+        ttk.Entry(self.root, textvariable=self.mutate_rate).grid(
+            column=1, row=1, padx=10, pady=5
+        )
+        ttk.Label(self.root, text="Probability of a bee to mutate").grid(
+            column=2, row=1, padx=10, pady=5
+        )
 
-        ttk.Label(self.root, text="Number of Generations:").grid(column=0, row=2, padx=10, pady=5)
-        ttk.Entry(self.root, textvariable=self.num_generations).grid(column=1, row=2, padx=10, pady=5)
+        ttk.Label(self.root, text="Crossover Rate:").grid(
+            column=0, row=2, padx=10, pady=5
+        )
+        ttk.Label(self.root, textvariable=self.crossover_rate).grid(
+            column=1, row=2, padx=10, pady=5
+        )
+        ttk.Label(
+            self.root, text="Probability of a bee interbreeding with another"
+        ).grid(column=2, row=2, padx=10, pady=5)
 
-        ttk.Button(self.root, text="Run Simulation", command=self.run_simulation).grid(column=0, row=3, columnspan=2, pady=10)
+        ttk.Label(self.root, text="Number of Generations:").grid(
+            column=0, row=3, padx=10, pady=5
+        )
+        ttk.Entry(self.root, textvariable=self.num_generations).grid(
+            column=1, row=3, padx=10, pady=5
+        )
 
-        self.progress = ttk.Progressbar(self.root, orient="horizontal", length=200, mode="determinate")
-        self.progress.grid(column=0, row=4, columnspan=2, pady=10)
+        ttk.Button(self.root, text="Run Simulation", command=self.run_simulation).grid(
+            column=0, row=4, columnspan=2, pady=10
+        )
+
+        self.progress = ttk.Progressbar(
+            self.root, orient="horizontal", length=200, mode="determinate"
+        )
+        self.progress.grid(column=0, row=5, columnspan=2, pady=10)
+
+        self.mutate_rate.trace("w", self.update_crossover_rate)
+
+    def update_crossover_rate(self, *args):
+        self.crossover_rate.set(1 - self.mutate_rate.get())
 
     def run_simulation(self):
         self.progress["maximum"] = self.num_generations.get()
@@ -48,8 +85,22 @@ class BeeSimulationApp:
             self.root.update_idletasks()
 
         self.plot_field(hive.best_bee.flowers, BEEHIVE_POS)
-        self.plot_best_path(hive.best_bee, BEEHIVE_POS, generation, best_distance, hive.total_mutations, hive.total_bees_generated, 1 - self.mutate_rate.get())
-        self.plot_best_distances(best_distances, self.mutate_rate.get(), 1 - self.mutate_rate.get(), POPULATION_SIZE)
+        self.plot_best_path(
+            hive.best_bee,
+            BEEHIVE_POS,
+            generation,
+            best_distance,
+            hive.total_mutations,
+            hive.total_bees_generated,
+            self.crossover_rate.get(),
+        )
+        self.plot_best_distances(
+            best_distances,
+            self.mutate_rate.get(),
+            self.crossover_rate.get(),
+            POPULATION_SIZE,
+            best_distance,
+        )
 
     def plot_field(self, flowers, BEEHIVE_POS):
         x, y = zip(*flowers)
@@ -61,7 +112,14 @@ class BeeSimulationApp:
         plt.legend()
         plt.show()
 
-    def plot_best_distances(self, best_distances, mutate_rate, crossover_rate, population_size):
+    def plot_best_distances(
+        self,
+        best_distances,
+        mutate_rate,
+        crossover_rate,
+        population_size,
+        best_distance,
+    ):
         plt.plot(best_distances)
         plt.title("Best Distance per Generation")
         plt.xlabel("Generation")
@@ -71,6 +129,7 @@ class BeeSimulationApp:
                 f"Mutation Rate: {mutate_rate * 100:.2f}%",
                 f"Crossover Rate: {crossover_rate * 100:.2f}%",
                 f"Population Size: {population_size}",
+                f"Best Distance: {best_distance:.2f}",
             )
         )
 
@@ -85,7 +144,16 @@ class BeeSimulationApp:
 
         plt.show()
 
-    def plot_best_path(self, best_bee, BEEHIVE_POS, generation, best_distance, total_mutations, total_bees_generated, crossover_rate):
+    def plot_best_path(
+        self,
+        best_bee,
+        BEEHIVE_POS,
+        generation,
+        best_distance,
+        total_mutations,
+        total_bees_generated,
+        crossover_rate,
+    ):
         path = [BEEHIVE_POS] + best_bee.path + [BEEHIVE_POS]
         x, y = zip(*path)
         plt.plot(x, y, marker="o")
@@ -117,6 +185,7 @@ class BeeSimulationApp:
         )
 
         plt.show()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
