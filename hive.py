@@ -29,7 +29,6 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
 
     def build_random_path(self):  # Build a random path to the flowers
         self.path = random.sample(self.flowers, len(self.flowers))
-        
 
     def calculate_fitness(
         self,
@@ -45,7 +44,6 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
             ((actual_pos[0] - BEEHIVE_POS[0]) ** 2)
             + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
         )
-        
 
     def mutate(
         self, paths
