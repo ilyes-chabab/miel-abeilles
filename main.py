@@ -35,7 +35,7 @@ class BeeSimulationApp:
         ttk.Entry(self.root, textvariable=self.mutate_rate).grid(
             column=1, row=2, padx=10, pady=5
         )
-        ttk.Label(self.root, text="Probability of a bee to mutate").grid(
+        ttk.Label(self.root, text="Rate of mutated bees").grid(
             column=2, row=2, padx=10, pady=5
         )
 
@@ -49,7 +49,7 @@ class BeeSimulationApp:
             column=1, row=4, padx=10, pady=5
         )
         ttk.Label(
-            self.root, text="Probability of a bee interbreeding with another"
+            self.root, text="Rate of cross-bees"
         ).grid(column=2, row=4, padx=10, pady=5)
 
         self.crossover_bees_label = ttk.Label(self.root, text="")
@@ -104,7 +104,7 @@ class BeeSimulationApp:
     def update_mutated_positions_label(self, *args):
         num_positions = max(1, int(len(FLOWERS) * self.MUTATION_INTENSITY.get()))
         self.mutated_positions_label.config(
-            text=f"Number of flower positions changed: {num_positions} / 50"
+            text=f"Number of flower position changed: {num_positions} / 50"
         )
 
     def update_selected_bees_label(self, *args):
