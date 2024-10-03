@@ -102,9 +102,10 @@ class BeeSimulationApp:
         self.crossover_rate.set(1 - self.mutate_rate.get())
 
     def update_mutated_positions_label(self, *args):
-        num_positions = max(1, int(len(FLOWERS) * self.MUTATION_INTENSITY.get()))
+        num_flowers = len(FLOWERS)
+        num_positions = max(1, int(num_flowers * self.MUTATION_INTENSITY.get()))
         self.mutated_positions_label.config(
-            text=f"Number of flower position changed: {num_positions} / 50"
+            text=f"Number of flower positions changed: {num_positions} / {num_flowers}"
         )
 
     def update_selected_bees_label(self, *args):

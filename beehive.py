@@ -10,7 +10,7 @@ POPULATION_RATE = 0.2  # The rate of the population to select for the next gener
 
 
 def init_flowers_list():  # Read the flowers from the file and return a list of positions
-    with open("field.txt", "r") as file:
+    with open("field500.txt", "r") as file:
         lines = file.readlines()
     pos = []
     for line in lines[1:]:
