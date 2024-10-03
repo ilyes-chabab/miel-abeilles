@@ -10,13 +10,15 @@ POPULATION_RATE = 0.2  # The rate of the population to select for the next gener
 
 
 def init_flowers_list():  # Read the flowers from the file and return a list of positions
-    with open("field500.txt", "r") as file:
+    with open("field.txt", "r") as file:
         lines = file.readlines()
     pos = []
     for line in lines[1:]:
         values = line.strip().split()
         pos.append(((int(values[0])), (int(values[1]))))
     return pos
+
+
 
 
 FLOWERS = init_flowers_list()  # The list of flowers the bees have to collect
@@ -35,15 +37,25 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
     ):  # Calculate the distance of the path the bee has to follow to collect all the flowers and return to the beehive
         self.distance = 0
         actual_pos = BEEHIVE_POS
-        for flower in self.path:
-            self.distance += math.sqrt(
-                ((actual_pos[0] - flower[0]) ** 2) + ((actual_pos[1] - flower[1]) ** 2)
-            )
-            actual_pos = (flower[0], flower[1])
-        self.distance += math.sqrt(
-            ((actual_pos[0] - BEEHIVE_POS[0]) ** 2)
-            + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
-        )
+        with open("distances.txt", "r") as file:
+            lines = file.readlines()
+            
+            for flower in self.path:
+                for line in lines:
+                    line_split = line.split('\t')
+                    x = line_split[0]
+                    y = line_split[1]
+                    dist = line_split[2]
+                    if str(actual_pos) == str(x):
+                        if str(flower) == str(y):
+                            self.distance += dist
+                            actual_pos = y
+                
+           
+
+            self.distance += math.sqrt((actual_pos[0] - flower[0])**2 + (actual_pos[1] - flower[1])**2)
+            
+        self.distance += abs(actual_pos[0] - BEEHIVE_POS[0]) + abs(actual_pos[1] - BEEHIVE_POS[1])
 
     def mutate(
         self, paths, MUTATION_INTENSITY
@@ -123,3 +135,8 @@ class Hive:
         selected_bees = self.select_best_bees()
         self.population = self.generate_new_population(selected_bees)
         self.evaluate_population()
+
+
+if __name__ == "__main__":
+    bee= Bee()
+    bee.calculate_fitness()
