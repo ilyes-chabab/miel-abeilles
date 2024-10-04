@@ -9,8 +9,10 @@ POPULATION_RATE = 0.2  # The rate of the population to select for the next gener
 # random.seed(42)  # Uncomment this line to get the same results every time
 
 
-def init_flowers_list():  # Read the flowers from the file and return a list of positions
-    with open("field.txt", "r") as file:
+def init_flowers_list(
+    filename,
+):  # Read the flowers from the specified file and return a list of positions
+    with open(filename, "r") as file:
         lines = file.readlines()
     pos = []
     for line in lines[1:]:
@@ -19,9 +21,8 @@ def init_flowers_list():  # Read the flowers from the file and return a list of 
     return pos
 
 
-
-
-FLOWERS = init_flowers_list()  # The list of flowers the bees have to collect
+filename = input("Please enter the filename: ")
+FLOWERS = init_flowers_list(filename)
 
 
 class Bee:  # The bee class represents a bee that has a path to follow and a distance to the flowers
@@ -37,25 +38,15 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
     ):  # Calculate the distance of the path the bee has to follow to collect all the flowers and return to the beehive
         self.distance = 0
         actual_pos = BEEHIVE_POS
-        with open("distances.txt", "r") as file:
-            lines = file.readlines()
-            
-            for flower in self.path:
-                for line in lines:
-                    line_split = line.split('\t')
-                    x = line_split[0]
-                    y = line_split[1]
-                    dist = line_split[2]
-                    if str(actual_pos) == str(x):
-                        if str(flower) == str(y):
-                            self.distance += dist
-                            actual_pos = y
-                
-           
-
-            self.distance += math.sqrt((actual_pos[0] - flower[0])**2 + (actual_pos[1] - flower[1])**2)
-            
-        self.distance += abs(actual_pos[0] - BEEHIVE_POS[0]) + abs(actual_pos[1] - BEEHIVE_POS[1])
+        for flower in self.path:
+            self.distance += math.sqrt(
+                ((actual_pos[0] - flower[0]) ** 2) + ((actual_pos[1] - flower[1]) ** 2)
+            )
+            actual_pos = (flower[0], flower[1])
+        self.distance += math.sqrt(
+            ((actual_pos[0] - BEEHIVE_POS[0]) ** 2)
+            + ((actual_pos[1] - BEEHIVE_POS[1]) ** 2)
+        )
 
     def mutate(
         self, paths, MUTATION_INTENSITY
@@ -82,6 +73,7 @@ class Hive:
         self.evaluate_population()
         self.total_mutations = 0
         self.total_bees_generated = POPULATION_SIZE
+        
 
     def evaluate_population(
         self,
@@ -135,8 +127,3 @@ class Hive:
         selected_bees = self.select_best_bees()
         self.population = self.generate_new_population(selected_bees)
         self.evaluate_population()
-
-
-if __name__ == "__main__":
-    bee= Bee()
-    bee.calculate_fitness()

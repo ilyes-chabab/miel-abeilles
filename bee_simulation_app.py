@@ -1,20 +1,23 @@
 import tkinter as tk
 from tkinter import ttk
+import tkinter.filedialog as fd
 from beehive import Hive, BEEHIVE_POS, POPULATION_SIZE, FLOWERS
 import matplotlib.pyplot as plt
+import threading
+import generate_flower_field
 
 
 class BeeSimulationApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Bee Simulation / Population size set at 100 bees")
-
         self.population_rate = tk.DoubleVar(value=0.2)
         self.mutate_rate = tk.DoubleVar(value=0.045)
         self.num_generations = tk.IntVar(value=1500)
         self.crossover_rate = tk.DoubleVar(value=1 - self.mutate_rate.get())
-        self.MUTATION_INTENSITY = tk.DoubleVar(value=0.05)  # New variable
-
+        self.MUTATION_INTENSITY = tk.DoubleVar(value=0.05)
+        self.running = False
+        self.simulation_thread = None
         self.create_widgets()
 
     def create_widgets(self):
@@ -48,9 +51,9 @@ class BeeSimulationApp:
         ttk.Label(self.root, textvariable=self.crossover_rate).grid(
             column=1, row=4, padx=10, pady=5
         )
-        ttk.Label(
-            self.root, text="Rate of cross-bees"
-        ).grid(column=2, row=4, padx=10, pady=5)
+        ttk.Label(self.root, text="Rate of cross-bees").grid(
+            column=2, row=4, padx=10, pady=5
+        )
 
         self.crossover_bees_label = ttk.Label(self.root, text="")
         self.crossover_bees_label.grid(column=0, row=5, columnspan=3, padx=10, pady=5)
@@ -78,14 +81,27 @@ class BeeSimulationApp:
             column=1, row=8, padx=10, pady=5
         )
 
-        ttk.Button(self.root, text="Run Simulation", command=self.run_simulation).grid(
-            column=0, row=9, columnspan=2, pady=10
-        )
+        ttk.Label(self.root, text="Number of Flowers:").grid(
+            column=0, row=9, padx=10, pady=5, sticky="e"
+        )  # Aligné à droite
+        self.num_flowers_entry = ttk.Entry(self.root)
+        self.num_flowers_entry.grid(column=1, row=9, padx=10, pady=5, sticky="e")
+
+        ttk.Button(
+            self.root, text="Generate Flower Field", command=self.generate_flower_field
+        ).grid(column=2, row=9, padx=10, pady=5)
+
+        ttk.Button(
+            self.root, text="Run Simulation", command=self.start_simulation
+        ).grid(column=0, row=10, columnspan=2, pady=10)
+        ttk.Button(
+            self.root, text="Stop Simulation", command=self.stop_simulation
+        ).grid(column=0, row=19, columnspan=2, pady=10)
 
         self.progress = ttk.Progressbar(
             self.root, orient="horizontal", length=200, mode="determinate"
         )
-        self.progress.grid(column=0, row=10, columnspan=2, pady=10)
+        self.progress.grid(column=0, row=11, columnspan=2, pady=10)
 
         self.mutate_rate.trace("w", self.update_crossover_rate)
         self.mutate_rate.trace("w", self.update_mutated_bees_label)
@@ -97,6 +113,10 @@ class BeeSimulationApp:
         self.update_selected_bees_label()
         self.update_mutated_bees_label()
         self.update_crossover_bees_label()
+
+    def generate_flower_field(self):
+        num_flowers = int(self.num_flowers_entry.get())
+        generate_flower_field.save_flower_field(num_flowers)
 
     def update_crossover_rate(self, *args):
         self.crossover_rate.set(1 - self.mutate_rate.get())
@@ -127,6 +147,7 @@ class BeeSimulationApp:
         )
 
     def run_simulation(self):
+        self.running = True
         self.progress["maximum"] = self.num_generations.get()
         self.progress["value"] = 0
 
@@ -135,15 +156,26 @@ class BeeSimulationApp:
         best_distance = hive.best_bee.distance
         best_distances = [best_distance]
 
-        while generation < self.num_generations.get():
+        while generation < self.num_generations.get() and self.running:
             hive.select_and_breed()
             generation += 1
             if hive.best_bee.distance < best_distance:
                 best_distance = hive.best_bee.distance
             best_distances.append(hive.best_bee.distance)
-            self.progress["value"] = generation
-            self.root.update_idletasks()
 
+            if self.running:
+                self.progress["value"] = generation
+                self.root.update_idletasks()
+
+        if self.running:
+
+            self.root.after(
+                0, self.plot_results, hive, best_distances, generation, best_distance
+            )
+
+        self.running = False
+
+    def plot_results(self, hive, best_distances, generation, best_distance):
         self.plot_field(FLOWERS, BEEHIVE_POS)
         self.plot_best_path(
             hive.best_bee,
@@ -161,6 +193,27 @@ class BeeSimulationApp:
             POPULATION_SIZE,
             best_distance,
         )
+
+    def start_simulation(self):
+        if self.simulation_thread is None or not self.simulation_thread.is_alive():
+            self.simulation_thread = threading.Thread(target=self.run_simulation)
+            self.simulation_thread.start()
+
+    def stop_simulation(self):
+        self.running = False
+
+        self.progress["value"] = 0
+        self.root.update_idletasks()
+
+        self.root.after(100, self.check_thread)
+
+    def check_thread(self):
+        if self.simulation_thread is not None and self.simulation_thread.is_alive():
+
+            self.root.after(100, self.check_thread)
+        else:
+
+            print("Simulation stopped and thread finished.")
 
     def plot_field(self, flowers, BEEHIVE_POS):
         x, y = zip(*flowers)
@@ -180,7 +233,7 @@ class BeeSimulationApp:
         population_size,
         best_distance,
     ):
-        plt.plot(best_distances)
+        plt.plot(best_distances, color="green")
         plt.title("Best Distance per Generation")
         plt.xlabel("Generation")
         plt.ylabel("Best Distance")
@@ -216,7 +269,7 @@ class BeeSimulationApp:
     ):
         path = [BEEHIVE_POS] + best_bee.path + [BEEHIVE_POS]
         x, y = zip(*path)
-        plt.plot(x, y, marker="o")
+        plt.plot(x, y, marker="o", color="green")
         plt.scatter(*BEEHIVE_POS, c="yellow", label="Hive", zorder=5)
         plt.title("Best path found")
         plt.xlabel("X")
@@ -245,4 +298,3 @@ class BeeSimulationApp:
         )
 
         plt.show()
-
