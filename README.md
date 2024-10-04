@@ -18,3 +18,11 @@ POPULATION_RATE = 0.2  : pourcentage des meilleur abeilles prisent pour chaque g
 
 Nos premières générations ont une distance totale d'environ 24000 . Avec 1000 générations nous avons pu atteindre 6500 de distance . 
 voici quelque graphique pour illustrer . 
+
+![Le menu](image/menu.png)
+
+![apperçu des fleurs dans le champs](image/field.png)
+
+![Le parcours effectué par l'abeille avec le meilleur itinéraire](image/parcours.png)
+
+![graphique montrant la meilleure distance par génération](image/convergence.png)
