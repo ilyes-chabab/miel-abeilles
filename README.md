@@ -70,8 +70,6 @@ Chaque génération est évaluée, et la meilleure abeille est sélectionnée po
 
 # Solution
 
-Nous avons donc, en équipe de 2, créé un algorithme génétique afin de trouver l’un des meilleurs itinéraires pour butiner ces fleurs le plus rapidement possible. La première génération de 100 abeilles a testé chacun un itinéraire au hasard et en fonction des paramètres choisis des générations meilleures sont créés. 
-
 Voici les paramètre que nous avons mis en place :
 
 Population Rate 10/100 : Le nombre de meilleurs abbeilles sélectionnées pour les générations suivantes
@@ -82,12 +80,12 @@ Crossover Rate 96/100 : Nombre d'abbeilles subissant un croisement
 
 Mutation intensity : 2/500 : Nombre de positions modifiées dans le génome
 
-Génération 1500 
+Génération 1500 : Nombre de génération créés avant la fin du programme 
 
 
 # Résultat 
 
-Nos premières générations ont une distance totale d'environ 24000 . Avec plus de 1000 générations nous avons pu atteindre 7460 de distance . 
+Nos premières générations ont une distance totale d'environ 24000 . Avec plus de 1000 générations nous avons pu atteindre environ 7460 de distance . 
 voici quelque graphique pour illustrer . 
 
 ![Le menu](image/menu.png)
@@ -96,7 +94,7 @@ voici quelque graphique pour illustrer .
 
 ![Le parcours effectué par l'abeille avec le meilleur itinéraire](image/parcours.png)
 
-![graphique montrant la meilleure distance par génération](image/convergence.png)
+![graphique montrant la meilleure distance trouvée par générations](image/convergence.png)
 
 # Analyse complémentaire 
 
