@@ -176,7 +176,7 @@ class BeeSimulationApp:
                 0, self.plot_results, hive, best_distances, generation, best_distance
             )
 
-        end_time = time.time() 
+        end_time = time.time()
         execution_time = end_time - start_time
         print(f"Simulation execution time : {execution_time} s")
 
