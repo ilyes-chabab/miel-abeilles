@@ -66,7 +66,7 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
         return new_path
 
 
-class Hive:
+class Hive: # The hive class represents a hive that contains a population of bees
     def __init__(self, population_size=100, mutate_rate=0.04, population_rate=0.2, mutation_intensity=0.05):
         global POPULATION_SIZE, MUTATE_RATE, POPULATION_RATE, MUTATION_INTENSITY
         
