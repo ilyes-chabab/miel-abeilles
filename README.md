@@ -20,9 +20,13 @@ Nous avons donc, en équipe de 2, créé un algorithme génétique afin de trouv
 Voici les paramètre que nous avons mis en place :
 
 Population Rate 10/100 : Le nombre de meilleurs abbeilles sélectionnées pour les générations suivantes
+
 Mutate rate 4/100 : Nombre d'abbeilles subissant une mutation
+
 Crossover Rate 96/100 : Nombre d'abbeilles subissant un croisement 
+
 Mutation intensity : 2/500 : Nombre de positions modifiées dans le génome
+
 Génération 1500 
 
 
