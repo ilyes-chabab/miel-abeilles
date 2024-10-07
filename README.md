@@ -13,6 +13,61 @@ Ce projet est une simulation d'abeilles qui utilise un algorithme génétique po
 
 Une ruche d’abeilles est installée dans un champ où il y a 50 fleurs. Les 100 abeilles de cette ruche se demandent quel est le meilleur itinéraire à effectuer pour butiner les 50 fleurs le plus rapidement possible.
 
+# Fonctionnement Fondamental
+
+Le programme utilise une approche basée sur l'algorithme génétique, qui imite le processus naturel de sélection, mutation et reproduction. Voici un aperçu de son fonctionnement :
+
+## 1. Chargement des Fleurs
+
+Les positions des fleurs sont lues à partir d'un fichier texte. Chaque fleur est représentée par ses coordonnées (x, y) dans un plan.
+
+## 2. Classes Principales
+
+### Classe `Bee`
+
+- **Représentation d'une Abeille** : Chaque abeille a un chemin aléatoire à travers les fleurs.
+- **Méthodes** :
+  - `build_random_path()` : Génère un chemin aléatoire.
+  - `calculate_fitness()` : Calcule la distance totale parcourue par l'abeille pour collecter le nectar et retourner à la ruche.
+  - `mutate()` : Applique une mutation au chemin en échangeant des fleurs.
+  - `crossover()` : Crée un nouveau chemin en combinant deux chemins d'abeilles parentes.
+
+### Classe `Hive`
+
+- **Représentation d'une Ruche** : La classe gère une population d'abeilles et leur évolution.
+- **Méthodes** :
+  - `evaluate_population()` : Évalue la population et identifie la meilleure abeille.
+  - `select_best_bees()` : Sélectionne les meilleures abeilles pour la reproduction.
+  - `generate_new_population()` : Crée une nouvelle génération d'abeilles par mutation et croisement.
+
+## 3. Boucle Principale
+
+La simulation est exécutée dans une boucle qui gère plusieurs générations :
+- Pour chaque génération, les meilleures abeilles sont sélectionnées et une nouvelle génération est créée par mutation ou croisement.
+- La distance parcourue par la meilleure abeille de chaque génération est affichée.
+- Les résultats finaux incluent le meilleur chemin trouvé et sa distance totale.
+
+## Méthodes d'Évolution
+
+Le programme utilise plusieurs méthodes pour faire évoluer la population d'abeilles :
+
+### 1. Sélection
+
+Les meilleures abeilles sont sélectionnées en fonction de leur distance parcourue. Cela simule la sélection naturelle, où les individus les plus adaptés sont choisis pour se reproduire.
+
+### 2. Mutation
+
+Chaque abeille a une probabilité de subir une mutation. Cela implique de modifier son chemin en échangeant des positions de fleurs. La mutation permet d'explorer de nouveaux chemins et d'éviter de rester coincé dans des solutions sous-optimales.
+
+### 3. Croisement
+
+Le croisement est utilisé pour créer de nouvelles abeilles en combinant les chemins de deux abeilles parentes. Cela permet de combiner les bonnes caractéristiques de deux chemins pour en créer un nouveau qui pourrait être meilleur.
+
+### 4. Évaluation
+
+Chaque génération est évaluée, et la meilleure abeille est sélectionnée pour passer à la génération suivante. Ce processus se répète sur plusieurs générations pour améliorer progressivement les performances des abeilles.
+
+
 # Solution
 
 Nous avons donc, en équipe de 2, créé un algorithme génétique afin de trouver l’un des meilleurs itinéraires pour butiner ces fleurs le plus rapidement possible. La première génération de 100 abeilles a testé chacun un itinéraire au hasard et en fonction des paramètres choisis des générations meilleures sont créés. 
