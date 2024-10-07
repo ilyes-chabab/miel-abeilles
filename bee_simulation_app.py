@@ -5,6 +5,7 @@ from beehive import Hive, BEEHIVE_POS, POPULATION_SIZE, FLOWERS
 import matplotlib.pyplot as plt
 import threading
 import generate_flower_field
+import time
 
 
 class BeeSimulationApp:
@@ -151,6 +152,8 @@ class BeeSimulationApp:
         self.progress["maximum"] = self.num_generations.get()
         self.progress["value"] = 0
 
+        start_time = time.time()
+
         hive = Hive()
         generation = 0
         best_distance = hive.best_bee.distance
@@ -172,6 +175,10 @@ class BeeSimulationApp:
             self.root.after(
                 0, self.plot_results, hive, best_distances, generation, best_distance
             )
+
+        end_time = time.time() 
+        execution_time = end_time - start_time
+        print(f"Simulation execution time : {execution_time} s")
 
         self.running = False
 
