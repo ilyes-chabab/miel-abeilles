@@ -98,4 +98,10 @@ voici quelque graphique pour illustrer .
 
 # Analyse complémentaire 
 
+![configuration](image/config.png)
 
+![Distance vs Mutation Intensity](image/DisanceVSMutationIntensity.png)
+
+![Distance vs Population Rate](image/DistanceVSPopulationRate.png)
+
+![Distance vs Mutation Rate](image/distanceVSmutationrate.png)
