@@ -38,3 +38,7 @@ voici quelque graphique pour illustrer .
 ![Le parcours effectué par l'abeille avec le meilleur itinéraire](image/parcours.png)
 
 ![graphique montrant la meilleure distance par génération](image/convergence.png)
+
+# Analyse complémentaire 
+
+
