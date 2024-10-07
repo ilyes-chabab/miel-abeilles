@@ -2,7 +2,7 @@ import random
 import math
 
 BEEHIVE_POS = (500, 500)  # The position of the beehive
-MUTATE_RATE = 0.045  # The probability of a bee to mutate
+MUTATE_RATE = 0.04  # The probability of a bee to mutate
 MUTATION_INTENSITY = 0.05  # The mutation intensity that controls how many flower positions will be affected by the mutation
 POPULATION_SIZE = 100  # The size of the population of bees
 POPULATION_RATE = 0.2  # The rate of the population to select for the next generation
@@ -67,12 +67,21 @@ class Bee:  # The bee class represents a bee that has a path to follow and a dis
 
 
 class Hive:
-    def __init__(self):
+    def __init__(self, population_size=100, mutate_rate=0.04, population_rate=0.2, mutation_intensity=0.05):
+        global POPULATION_SIZE, MUTATE_RATE, POPULATION_RATE, MUTATION_INTENSITY
+        
+       
+        POPULATION_SIZE = population_size
+        MUTATE_RATE = mutate_rate
+        POPULATION_RATE = population_rate
+        MUTATION_INTENSITY = mutation_intensity
+
         self.population = [Bee() for _ in range(POPULATION_SIZE)]
         self.best_bee = None
         self.evaluate_population()
         self.total_mutations = 0
         self.total_bees_generated = POPULATION_SIZE
+
         
 
     def evaluate_population(

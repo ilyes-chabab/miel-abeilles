@@ -13,7 +13,7 @@ class BeeSimulationApp:
         self.root = root
         self.root.title("Bee Simulation / Population size set at 100 bees")
         self.population_rate = tk.DoubleVar(value=0.2)
-        self.mutate_rate = tk.DoubleVar(value=0.045)
+        self.mutate_rate = tk.DoubleVar(value=0.04)
         self.num_generations = tk.IntVar(value=1500)
         self.crossover_rate = tk.DoubleVar(value=1 - self.mutate_rate.get())
         self.MUTATION_INTENSITY = tk.DoubleVar(value=0.05)
@@ -154,7 +154,20 @@ class BeeSimulationApp:
 
         start_time = time.time()
 
-        hive = Hive()
+       
+        population_size = int(POPULATION_SIZE) 
+        mutate_rate = self.mutate_rate.get()
+        population_rate = self.population_rate.get()
+        mutation_intensity = self.MUTATION_INTENSITY.get()
+        
+        
+        hive = Hive(
+            population_size=population_size,
+            mutate_rate=mutate_rate,
+            population_rate=population_rate,
+            mutation_intensity=mutation_intensity,
+        )
+
         generation = 0
         best_distance = hive.best_bee.distance
         best_distances = [best_distance]
@@ -171,16 +184,14 @@ class BeeSimulationApp:
                 self.root.update_idletasks()
 
         if self.running:
-
-            self.root.after(
-                0, self.plot_results, hive, best_distances, generation, best_distance
-            )
+            self.root.after(0, self.plot_results, hive, best_distances, generation, best_distance)
 
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"Simulation execution time : {execution_time} s")
 
         self.running = False
+
 
     def plot_results(self, hive, best_distances, generation, best_distance):
         self.plot_field(FLOWERS, BEEHIVE_POS)
