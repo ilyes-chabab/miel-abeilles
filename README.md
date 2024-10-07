@@ -85,7 +85,7 @@ Génération 1500 : Nombre de génération créés avant la fin du programme
 
 # Résultat 
 
-Nos premières générations ont une distance totale d'environ 24000 . Avec plus de 1000 générations nous avons pu atteindre environ 7460 de distance . 
+Nos premières générations ont une distance totale d'environ 24000 . Avec plus de 1000 générations nous avons pu atteindre environ 7500 de distance . 
 voici quelque graphique pour illustrer . 
 
 ![Le menu](image/menu.png)
