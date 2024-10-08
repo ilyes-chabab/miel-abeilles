@@ -12,11 +12,11 @@ class BeeSimulationApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Bee Simulation / Population size set at 100 bees")
-        self.population_rate = tk.DoubleVar(value=0.2)
-        self.mutate_rate = tk.DoubleVar(value=0.04)
+        self.population_rate = tk.DoubleVar(value=0.3)
+        self.mutate_rate = tk.DoubleVar(value=0.2)
         self.num_generations = tk.IntVar(value=1500)
         self.crossover_rate = tk.DoubleVar(value=1 - self.mutate_rate.get())
-        self.MUTATION_INTENSITY = tk.DoubleVar(value=0.05)
+        self.MUTATION_INTENSITY = tk.DoubleVar(value=0.06)
         self.running = False
         self.simulation_thread = None
         self.create_widgets()

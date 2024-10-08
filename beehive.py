@@ -2,10 +2,10 @@ import random
 import math
 
 BEEHIVE_POS = (500, 500)  # The position of the beehive
-MUTATE_RATE = 0.04  # The probability of a bee to mutate
-MUTATION_INTENSITY = 0.05  # The mutation intensity that controls how many flower positions will be affected by the mutation
+MUTATE_RATE = 0.2  # The probability of a bee to mutate
+MUTATION_INTENSITY = 0.06  # The mutation intensity that controls how many flower positions will be affected by the mutation
 POPULATION_SIZE = 100  # The size of the population of bees
-POPULATION_RATE = 0.2  # The rate of the population to select for the next generation
+POPULATION_RATE = 0.3  # The rate of the population to select for the next generation
 # random.seed(42)  # Uncomment this line to get the same results every time
 
 
