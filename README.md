@@ -78,7 +78,7 @@ Mutate rate 4/100 : Nombre d'abbeilles subissant une mutation
 
 Crossover Rate 96/100 : Nombre d'abbeilles subissant un croisement 
 
-Mutation intensity : 2/500 : Nombre de positions modifiées dans le génome
+Mutation intensity : 2/50 : Nombre de positions modifiées dans le génome
 
 Génération 1500 : Nombre de génération créés avant la fin du programme 
 
