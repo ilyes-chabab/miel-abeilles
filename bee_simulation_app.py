@@ -154,13 +154,11 @@ class BeeSimulationApp:
 
         start_time = time.time()
 
-       
-        population_size = int(POPULATION_SIZE) 
+        population_size = int(POPULATION_SIZE)
         mutate_rate = self.mutate_rate.get()
         population_rate = self.population_rate.get()
         mutation_intensity = self.MUTATION_INTENSITY.get()
-        
-        
+
         hive = Hive(
             population_size=population_size,
             mutate_rate=mutate_rate,
@@ -184,14 +182,15 @@ class BeeSimulationApp:
                 self.root.update_idletasks()
 
         if self.running:
-            self.root.after(0, self.plot_results, hive, best_distances, generation, best_distance)
+            self.root.after(
+                0, self.plot_results, hive, best_distances, generation, best_distance
+            )
 
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"Simulation execution time : {execution_time} s")
 
         self.running = False
-
 
     def plot_results(self, hive, best_distances, generation, best_distance):
         self.plot_field(FLOWERS, BEEHIVE_POS)
