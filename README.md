@@ -105,3 +105,8 @@ voici quelque graphique pour illustrer .
 ![Distance vs Population Rate](image/DistanceVSPopulationRate.png)
 
 ![Distance vs Mutation Rate](image/distanceVSmutationrate.png)
+
+
+Plus il y à d’aléatoire, plus on observe des variations dans les résultats, moins il y à d’aléatoire, plus on arrive à une stagnation vers un minimum local.
+
+Pour obtenir les meilleurs résultats, il faut maintenir un taux d’aléatoire minimal afin de permettre a l’algorithme de rechercher et transmettre le maximum de solutions sans se heurter à une stagnation trop rapide. 
