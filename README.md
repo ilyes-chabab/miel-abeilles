@@ -53,19 +53,19 @@ Le programme utilise plusieurs méthodes pour faire évoluer la population d'abe
 
 ### 1. Sélection
 
-Les meilleures abeilles sont sélectionnées en fonction de leur distance parcourue. Cela simule la sélection naturelle, où les individus les plus adaptés sont choisis pour se reproduire.
+Les n meilleures abeilles sont sélectionnées (n = population_rate) en fonction de leur distance parcourue. Cela simule la sélection naturelle, où les individus les plus adaptés sont choisis pour se reproduire.
 
 ### 2. Mutation
 
-Chaque abeille a une probabilité de subir une mutation. Cela implique de modifier son chemin en échangeant des positions de fleurs. La mutation permet d'explorer de nouveaux chemins et d'éviter de rester coincé dans des solutions sous-optimales.
+Chaque abeille a une probabilité de subir une mutation (mutation_rate). Cela implique de modifier son chemin en échangeant n positions de fleurs (n = mutation_intensity). La mutation permet d'explorer de nouveaux chemins et d'éviter de rester coincé dans des solutions sous-optimales.
 
 ### 3. Croisement
 
-Le croisement est utilisé pour créer de nouvelles abeilles en combinant les chemins de deux abeilles parentes. Cela permet de combiner les bonnes caractéristiques de deux chemins pour en créer un nouveau qui pourrait être meilleur.
+Le croisement (si 20/100 des abeilles mutent, 80/100 sont croisées) est utilisé pour créer de nouvelles abeilles en combinant les chemins de deux abeilles parentes. Cela permet de combiner les bonnes caractéristiques de deux chemins pour en créer un nouveau qui pourrait être meilleur.
 
 ### 4. Évaluation
 
-Chaque génération est évaluée, et la meilleure abeille est sélectionnée pour passer à la génération suivante. Ce processus se répète sur plusieurs générations pour améliorer progressivement les performances des abeilles.
+Chaque génération est évaluée, et n meilleure abeille sont sélectionnées (n = population_rate) pour passer à la génération suivante. Ce processus se répète sur plusieurs générations pour améliorer progressivement les performances des abeilles.
 
 
 # Solution
