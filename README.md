@@ -72,7 +72,7 @@ Chaque génération est évaluée, et n meilleure abeille sont sélectionnées (
 
 Voici les paramètre que nous avons mis en place :
 
-Population Rate 10/100 : Le nombre de meilleurs abbeilles sélectionnées pour les générations suivantes
+Population Rate 20/100 : Le nombre de meilleurs abbeilles sélectionnées pour les générations suivantes
 
 Mutate rate 4/100 : Nombre d'abbeilles subissant une mutation
 
